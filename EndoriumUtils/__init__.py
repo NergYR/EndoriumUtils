@@ -10,4 +10,4 @@ dans différents projets, principalement:
 from EndoriumUtils.log_utils import setup_logger, get_logger, log_function_call, log_performance, purge_old_logs
 from EndoriumUtils.version_utils import get_version, increment_version, set_version
 
-__version__ = "1.0.0"
+__version__ = "1.0.3"

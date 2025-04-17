@@ -17,9 +17,13 @@ except FileNotFoundError:
     Ce module fournit des fonctionnalités communes pour la gestion des logs et des versions.
     """
 
+# Lire la version depuis version.txt
+with open("version.txt", "r") as f:
+    version = f.read().strip()
+
 setup(
     name="EndoriumUtils",
-    version="1.0.0",
+    version=version,
     author="Energetiq",
     author_email="energetiq@outlook.com",
     description="Utilitaires communs pour les projets Endorium",
