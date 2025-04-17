@@ -2,11 +2,20 @@
 Script d'installation pour EndoriumUtils
 """
 
+import os
 from setuptools import setup, find_packages
 
 # Lire la description longue depuis README.md
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+try:
+    with open("README.md", "r", encoding="utf-8") as fh:
+        long_description = fh.read()
+except FileNotFoundError:
+    # Fallback si README.md n'est pas trouvé
+    long_description = """
+    EndoriumUtils - Bibliothèque d'utilitaires réutilisables pour les projets Endorium
+    
+    Ce module fournit des fonctionnalités communes pour la gestion des logs et des versions.
+    """
 
 setup(
     name="EndoriumUtils",

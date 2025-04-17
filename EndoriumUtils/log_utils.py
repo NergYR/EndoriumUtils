@@ -299,7 +299,7 @@ def purge_old_logs(days=30, base_dir=None):
         log_folder = os.path.join(base_dir, "logs")
         if not os.path.exists(log_folder):
             logger.warning(f"Dossier de logs introuvable: {log_folder}")
-            return
+            return 0
             
         now = time.time()
         count = 0
