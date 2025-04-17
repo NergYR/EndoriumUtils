@@ -16,7 +16,7 @@ setup(
     description="Utilitaires communs pour les projets Endorium",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/votrecompte/EndoriumUtils",
+    url="https://github.com/NergYR/EndoriumUtils",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
