@@ -18,8 +18,13 @@ except FileNotFoundError:
     """
 
 # Lire la version depuis version.txt
-with open("version.txt", "r") as f:
-    version = f.read().strip()
+
+try:
+    with open("version.txt", "r") as f:
+        version = f.read().strip()
+except FileNotFoundError:
+    # Fallback si version.txt n'est pas trouvé
+    version = "1.1.0"
 
 setup(
     name="EndoriumUtils",
