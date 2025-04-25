@@ -6,6 +6,8 @@ Bibliothèque d'utilitaires pour les projets Endorium.
 
 - **Gestion des logs**: Configuration avancée du système de logs avec rotation et séparation par niveau
 - **Gestion des versions**: Lecture et incrémentation automatique des versions de projet
+- **Gestion des fichiers**: Lecture/écriture sécurisée de fichiers avec backup automatique
+- **Gestion des configurations**: Chargement/sauvegarde de configurations en JSON et YAML
 
 ## Installation
 
@@ -59,6 +61,51 @@ print(f"Nouvelle version: {new_version}")  # ex: "1.1.0"
 
 # Définir explicitement une version
 set_version("2.0.0")
+```
+
+### Gestion des fichiers
+
+```python
+from EndoriumUtils import safe_read_file, safe_write_file, get_file_hash
+
+# Lecture sécurisée
+content = safe_read_file("mon_fichier.txt", default_content="Contenu par défaut")
+
+# Écriture sécurisée avec backup automatique
+safe_write_file("mon_fichier.txt", "Nouveau contenu", create_backup=True)
+
+# Vérifier l'intégrité d'un fichier
+file_hash = get_file_hash("mon_fichier.txt")
+```
+
+### Gestion des configurations
+
+```python
+from EndoriumUtils import load_config, save_config, get_config_value, set_config_value
+
+# Configuration par défaut
+default_config = {
+    "app": {
+        "name": "MonApplication",
+        "debug": False
+    },
+    "database": {
+        "host": "localhost",
+        "port": 5432
+    }
+}
+
+# Charger une configuration
+config = load_config("config.json", default_config)
+
+# Accéder à une valeur (avec notation par points)
+db_host = get_config_value(config, "database.host", "127.0.0.1")
+
+# Modifier une valeur
+set_config_value(config, "app.debug", True)
+
+# Sauvegarder la configuration
+save_config(config, "config.json")
 ```
 
 ## Licence

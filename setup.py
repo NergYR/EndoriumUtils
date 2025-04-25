@@ -35,6 +35,14 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     python_requires=">=3.6",
+    keywords="logging, version management, utilities",
+    project_urls={
+        "Bug Reports": "https://github.com/NergYR/EndoriumUtils/issues",
+        "Source": "https://github.com/NergYR/EndoriumUtils",
+    },
 )

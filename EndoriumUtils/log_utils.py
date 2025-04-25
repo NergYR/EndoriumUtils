@@ -15,6 +15,22 @@ from contextlib import contextmanager
 # S'assurer que le logging de base est configuré (pour éviter les messages d'avertissement)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
+class ColoredFormatter(logging.Formatter):
+    """Formatter qui colore les logs selon le niveau pour la console"""
+    COLORS = {
+        logging.DEBUG: "\033[36m",    # Cyan
+        logging.INFO: "\033[32m",     # Vert
+        logging.WARNING: "\033[33m",  # Jaune
+        logging.ERROR: "\033[31m",    # Rouge
+        logging.CRITICAL: "\033[41m\033[97m",  # Fond rouge, texte blanc
+    }
+    RESET = "\033[0m"
+
+    def format(self, record):
+        color = self.COLORS.get(record.levelno, self.RESET)
+        message = super().format(record)
+        return f"{color}{message}{self.RESET}"
+
 def setup_logger(name, log_level=logging.DEBUG, base_dir=None):
     """Configure et renvoie un logger avec des handlers pour la console et les fichiers
     
@@ -72,7 +88,7 @@ def setup_logger(name, log_level=logging.DEBUG, base_dir=None):
     perf_format = "%(asctime)s [PERF] %(name)s: %(message)s"
     
     # Configuration du formatter
-    console_formatter = logging.Formatter(console_format)
+    console_formatter = ColoredFormatter(console_format)
     file_formatter = logging.Formatter(file_format)
     perf_formatter = logging.Formatter(perf_format)
     
@@ -319,3 +335,29 @@ def purge_old_logs(days=30, base_dir=None):
         logger.error(f"Erreur lors de la purge des logs: {str(e)}")
         logger.error(traceback.format_exc())
         return 0
+
+def set_log_level(logger, level):
+    """Change dynamiquement le niveau de log d'un logger et de ses handlers."""
+    logger.setLevel(level)
+    for handler in logger.handlers:
+        handler.setLevel(level)
+
+def get_log_file_paths(logger):
+    """Retourne la liste des chemins de fichiers utilisés par les handlers de type fichier du logger."""
+    paths = []
+    for handler in logger.handlers:
+        if hasattr(handler, 'baseFilename'):
+            paths.append(handler.baseFilename)
+    return paths
+
+def log_exceptions(func):
+    """Décorateur pour logger automatiquement toutes les exceptions non capturées dans la fonction."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logger = get_logger(func.__module__)
+            logger.exception(f"Exception non capturée dans {func.__name__}: {e}")
+            raise
+    return wrapper
