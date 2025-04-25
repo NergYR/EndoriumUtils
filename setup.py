@@ -22,7 +22,7 @@ except FileNotFoundError:
     """
 
 # Lire la version depuis version.txt ou depuis le module
-version = "1.1.0"  # Version par défaut
+version = "1.1.3"  # Version par défaut
 try:
     with open(os.path.join(package_dir, "version.txt"), "r") as f:
         version = f.read().strip()
