@@ -61,4 +61,4 @@ __all__ = [
     "set_config_value",
 ]
 
-__version__ = "1.0.3"
+__version__ = "1.1.4"
