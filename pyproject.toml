@@ -20,6 +20,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
+[project.optional-dependencies]
+yaml = ["pyyaml"]
+
 [project.urls]
 "Bug Reports" = "https://github.com/NergYR/EndoriumUtils/issues"
 "Source" = "https://github.com/NergYR/EndoriumUtils"

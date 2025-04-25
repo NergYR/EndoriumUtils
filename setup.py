@@ -65,4 +65,8 @@ setup(
     package_data={
         "": ["*.md", "*.txt"],  # Inclure les fichiers .md et .txt dans tous les packages
     },
+    install_requires=[],  # Dépendances de base
+    extras_require={
+        "yaml": ["pyyaml"],  # Dépendances optionnelles pour le support YAML
+    },
 )

@@ -15,6 +15,12 @@ Bibliothèque d'utilitaires pour les projets Endorium.
 pip install EndoriumUtils
 ```
 
+Pour utiliser les fonctionnalités YAML, installez la bibliothèque avec le support YAML :
+
+```bash
+pip install EndoriumUtils[yaml]
+```
+
 Ou depuis le code source:
 
 ```bash
