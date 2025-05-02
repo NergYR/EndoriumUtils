@@ -65,8 +65,11 @@ setup(
     package_data={
         "": ["*.md", "*.txt"],  # Inclure les fichiers .md et .txt dans tous les packages
     },
-    install_requires=[],  # Dépendances de base
+    install_requires=[
+        # Toutes les dépendances critiques sont dans la stdlib, rien d'obligatoire ici
+    ],  # Dépendances de base
     extras_require={
         "yaml": ["pyyaml"],  # Dépendances optionnelles pour le support YAML
+        "ldap": ["ldap3"],   # Dépendances optionnelles pour LDAP
     },
 )

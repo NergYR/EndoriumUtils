@@ -225,6 +225,69 @@ def publier_nouvelle_version():
     return new_version
 ```
 
+## Exemples d'utilisation du module d'authentification
+
+### Authentification simple (plain)
+```python
+from EndoriumUtils.auth_utils import get_authenticator
+
+users = {"alice": "motdepasse", "bob": "1234"}
+auth = get_authenticator("plain", users=users)
+print(auth.authenticate("alice", "motdepasse"))  # True
+print(auth.authenticate("bob", "badpass"))       # False
+```
+
+### Authentification sécurisée (hash)
+```python
+import hashlib
+from EndoriumUtils.auth_utils import get_authenticator
+
+# Stockez les mots de passe hashés
+users = {
+    "alice": hashlib.sha256("motdepasse".encode()).hexdigest(),
+    "bob": hashlib.sha256("1234".encode()).hexdigest()
+}
+auth = get_authenticator("secure", users=users, hash_algo="sha256")
+print(auth.authenticate("alice", "motdepasse"))  # True
+print(auth.authenticate("bob", "badpass"))       # False
+```
+
+### Authentification SQLite
+```python
+from EndoriumUtils.auth_utils import get_authenticator
+
+# Suppose que la table 'users' existe avec les colonnes 'username' et 'password'
+auth = get_authenticator("sqlite", db_path="ma_base.db")
+print(auth.authenticate("alice", "motdepasse"))
+```
+
+### Authentification LDAP
+```python
+from EndoriumUtils.auth_utils import get_authenticator
+
+auth = get_authenticator(
+    "ldap",
+    server_uri="ldap://ldap.exemple.com",
+    base_dn="dc=exemple,dc=com",
+    user_template="uid={username},{base_dn}"
+)
+print(auth.authenticate("alice", "motdepasse"))
+```
+
+### Authentification SSO (OAuth2) [placeholder]
+```python
+from EndoriumUtils.auth_utils import get_authenticator
+
+auth = get_authenticator(
+    "sso",
+    provider="google",
+    client_id="VOTRE_CLIENT_ID",
+    client_secret="VOTRE_SECRET",
+    redirect_uri="https://votre-app/callback"
+)
+print(auth.authenticate("alice", "motdepasse"))  # Toujours False (placeholder)
+```
+
 ## Licence
 
 MIT
