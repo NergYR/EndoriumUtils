@@ -161,6 +161,27 @@ save_config(yaml_config, "config.yaml", file_format="yaml", indent=4)
 auto_config = load_config("config.yml", default_config)  # Détectera YAML automatiquement
 ```
 
+#### Stockage sécurisé de mot de passe dans la configuration
+
+```python
+from EndoriumUtils import set_password, verify_password
+
+# Exemple de configuration vide
+config = {}
+
+# Stocker un mot de passe sécurisé (hashé + sel)
+set_password(config, "auth.admin_password", "MonSuperMotDePasse")
+
+# Vérifier le mot de passe (retourne True si correct)
+assert verify_password(config, "auth.admin_password", "MonSuperMotDePasse") is True
+
+# Vérification avec un mauvais mot de passe (retourne False)
+assert verify_password(config, "auth.admin_password", "MauvaisMotDePasse") is False
+
+# Sauvegarder la configuration contenant le mot de passe hashé
+save_config(config, "config.json")
+```
+
 ### Combinaisons pratiques
 
 ```python
