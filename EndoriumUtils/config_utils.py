@@ -7,6 +7,9 @@ import sys
 import json
 from typing import Dict, Any, Optional, Union
 import tempfile
+import base64
+import hashlib
+import secrets
 
 from EndoriumUtils.log_utils import get_logger, log_function_call
 from EndoriumUtils.file_utils import safe_read_file, safe_write_file
@@ -174,3 +177,53 @@ def _deep_update(target: Dict[str, Any], source: Dict[str, Any]) -> Dict[str, An
         else:
             target[key] = value
     return target
+
+def set_password(config: Dict[str, Any], key_path: str, password: str, iterations: int = 100_000) -> Dict[str, Any]:
+    """
+    Stocke un mot de passe de façon sécurisée (hash PBKDF2 + sel) dans la configuration.
+    Le résultat est une chaîne base64 contenant le sel et le hash.
+    Args:
+        config (dict): Configuration à modifier
+        key_path (str): Chemin de la clé (ex: "auth.admin_password")
+        password (str): Mot de passe en clair à stocker
+        iterations (int): Nombre d'itérations PBKDF2 (défaut: 100_000)
+    Returns:
+        dict: Configuration modifiée
+    """
+    salt = secrets.token_bytes(16)
+    hash_bytes = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+    data = {
+        "salt": base64.b64encode(salt).decode("utf-8"),
+        "hash": base64.b64encode(hash_bytes).decode("utf-8"),
+        "iterations": iterations,
+        "algo": "pbkdf2_sha256"
+    }
+    set_config_value(config, key_path, data)
+    return config
+
+def verify_password(config: Dict[str, Any], key_path: str, password: str) -> bool:
+    """
+    Vérifie un mot de passe par rapport à la valeur stockée dans la configuration.
+    Args:
+        config (dict): Configuration à lire
+        key_path (str): Chemin de la clé (ex: "auth.admin_password")
+        password (str): Mot de passe à vérifier
+    Returns:
+        bool: True si le mot de passe est correct, False sinon
+    """
+    data = get_config_value(config, key_path)
+    if not isinstance(data, dict):
+        return False
+    try:
+        salt = base64.b64decode(data["salt"])
+        hash_stored = base64.b64decode(data["hash"])
+        iterations = int(data.get("iterations", 100_000))
+        algo = data.get("algo", "pbkdf2_sha256")
+        if algo != "pbkdf2_sha256":
+            logger.error(f"Algorithme non supporté: {algo}")
+            return False
+        hash_test = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+        return secrets.compare_digest(hash_stored, hash_test)
+    except Exception as e:
+        logger.error(f"Erreur lors de la vérification du mot de passe: {str(e)}")
+        return False
