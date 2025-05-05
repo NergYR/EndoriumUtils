@@ -37,6 +37,9 @@ from EndoriumUtils.config_utils import (
     get_config_value,
     set_config_value,
 )
+from EndoriumUtils.auth_utils import (
+    get_authenticator,
+)
 
 __all__ = [
     "setup_logger",
@@ -59,6 +62,7 @@ __all__ = [
     "save_config",
     "get_config_value",
     "set_config_value",
+    "get_authenticator",
 ]
 
-__version__ = "1.1.4"
+__version__ = "1.2.5"
